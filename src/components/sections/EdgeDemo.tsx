@@ -9,7 +9,9 @@ import {
   FileText,
   Heart,
   Image as ImageIcon,
+  Hand,
   Inbox,
+  Play,
   Presentation,
   RotateCcw,
   X,
@@ -22,6 +24,9 @@ import { cn } from '@/lib/cn'
  * the right edge come out while a file is dragged, take the drop, and open
  * as a drawer whose cards can be dragged back out. Pointer events (mouse and
  * touch); Enter on a file shelves it, Enter on a card puts it back.
+ *
+ * While it is on screen it plays itself like a short film, with a cursor
+ * doing all of that; a click hands it over to the visitor.
  */
 
 type Kind = 'pdf' | 'image' | 'slides' | 'sheet'
@@ -51,6 +56,9 @@ const KIND_STYLE: Record<Kind, { bg: string; Icon: typeof FileText }> = {
   slides: { bg: '#e2733a', Icon: Presentation },
   sheet: { bg: '#2f9e5b', Icon: FileSpreadsheet },
 }
+
+type Point = { x: number; y: number }
+type Cursor = Point & { dur: number; pressed: boolean; shown: boolean }
 
 type Drag = {
   file: DemoFile
@@ -99,6 +107,13 @@ export function EdgeDemo() {
   const [drag, setDrag] = useState<Drag | null>(null)
   const dragRef = useRef<Drag | null>(null)
   const tuckTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // The film: a pretend cursor, and the file it carries.
+  const [auto, setAuto] = useState(false)
+  const [cursor, setCursor] = useState<Cursor>({ x: 0, y: 0, dur: 0, pressed: false, shown: false })
+  const [ghost, setGhost] = useState<DemoFile | null>(null)
+  // Each film gets a token; changing it stops the one playing.
+  const run = useRef({ token: 0 })
+  const tookOver = useRef(false)
 
   const nameOf = (f: DemoFile) => t.demo.desktop[Number(f.id.slice(1))]
   const [desktop, setDesktop] = useState<Placed[]>(freshDesktop)
@@ -120,6 +135,11 @@ export function EdgeDemo() {
   const tabW = Math.round(Math.min(156, Math.max(112, width * 0.3)))
   const drawerW = Math.round(Math.min(300, Math.max(200, width * 0.48)))
   const tail = 22
+  // For code that runs later (the film, timers): the size as it is now.
+  const size = useRef({ width, tabW })
+  useEffect(() => {
+    size.current = { width, tabW }
+  }, [width, tabW])
 
   const later = (fn: () => void, ms: number) => {
     if (tuckTimer.current) clearTimeout(tuckTimer.current)
@@ -151,7 +171,11 @@ export function EdgeDemo() {
     setShelves((s) => ({ ...s, [from]: s[from].filter((f) => f.id !== file.id) }))
     setDesktop((d) => [
       ...d,
-      { ...file, x: Math.min(width - tabW - 110, Math.max(8, x)), y: Math.min(62, Math.max(4, y)) },
+      {
+        ...file,
+        x: Math.min(size.current.width - size.current.tabW - 110, Math.max(8, x)),
+        y: Math.min(62, Math.max(4, y)),
+      },
     ])
     setStep('done')
   }
@@ -247,6 +271,145 @@ export function EdgeDemo() {
     setStep('drag')
   }
 
+  /** Plays the film from the start, over and over, until stopped. */
+  const play = async () => {
+    const token = ++run.current.token
+    const wait = (ms: number) =>
+      new Promise<void>((done, stop) =>
+        setTimeout(() => (run.current.token === token ? done() : stop(new Error('stopped'))), ms),
+      )
+    const stage = () => stageRef.current!.getBoundingClientRect()
+    const center = (selector: string): Point => {
+      const s = stage()
+      const r = stageRef.current!.querySelector(selector)!.getBoundingClientRect()
+      return { x: r.left - s.left + r.width / 2, y: r.top - s.top + r.height / 2 }
+    }
+    const move = async (p: Point, dur: number) => {
+      setCursor((c) => ({ ...c, ...p, dur, shown: true }))
+      await wait(dur)
+    }
+    const click = async () => {
+      setCursor((c) => ({ ...c, pressed: true }))
+      await wait(140)
+      setCursor((c) => ({ ...c, pressed: false }))
+    }
+    const file: DemoFile = { id: 'f0', kind: 'pdf' }
+    setAuto(true)
+    try {
+      for (;;) {
+        reset()
+        setTarget(null)
+        setHovered(null)
+        setGhost(null)
+        const { width: w, tabW: tw } = size.current
+        const h = stage().height
+        setCursor({ x: w * 0.5, y: h * 0.7, dur: 0, pressed: false, shown: true })
+        await wait(900)
+
+        // Grab a file and start dragging: the tabs come out.
+        await move(center('[data-file="f0"]'), 800)
+        setCursor((c) => ({ ...c, pressed: true }))
+        await wait(160)
+        setGhost(file)
+        setMode('drag')
+        setStep('drop')
+        await wait(380)
+        const tab = center('nav [data-drop="work"]')
+        await move({ x: w - tw / 2 - 4, y: tab.y }, 1000)
+        setTarget('work')
+        await wait(380)
+
+        // Drop it on a shelf; the tabs tuck back in.
+        setCursor((c) => ({ ...c, pressed: false }))
+        setGhost(null)
+        setTarget(null)
+        shelve(file, 'desktop', 'work')
+        await wait(900)
+        setMode('idle')
+        await wait(900)
+
+        // To the edge: the tabs peek out; open the shelf.
+        await move({ x: w - 7, y: tab.y }, 700)
+        setMode('peek')
+        setHovered('work')
+        await wait(420)
+        await move({ x: w - tw / 2, y: tab.y }, 380)
+        await click()
+        setActive('work')
+        setHovered(null)
+        setMode('open')
+        setStep('out')
+        await wait(1100)
+
+        // Drag the card back onto the desktop.
+        await move(center('[data-card="f0"]'), 700)
+        setCursor((c) => ({ ...c, pressed: true }))
+        await wait(160)
+        setGhost(file)
+        await move({ x: SPOTS[0].x + 48, y: h * (SPOTS[0].y / 100) + 30 }, 1000)
+        setCursor((c) => ({ ...c, pressed: false }))
+        setGhost(null)
+        unshelve(file, 'work', SPOTS[0].x, SPOTS[0].y)
+        await wait(1000)
+
+        // Close the drawer, and once more from the top.
+        await move(center('[data-close]'), 650)
+        await click()
+        setMode('idle')
+        await wait(2400)
+      }
+    } catch {
+      // Stopped: the visitor took over, or the demo left the screen.
+    }
+  }
+
+  /** Stop the film and give the desktop to the visitor. */
+  const stop = () => {
+    run.current.token++
+    setAuto(false)
+    setGhost(null)
+    setTarget(null)
+    setHovered(null)
+    setCursor((c) => ({ ...c, shown: false, pressed: false }))
+    reset()
+  }
+
+  // Play while the demo is on screen (not for people who prefer less motion).
+  const playRef = useRef(play)
+  const stopRef = useRef(stop)
+  useEffect(() => {
+    playRef.current = play
+    stopRef.current = stop
+  })
+  useEffect(() => {
+    const el = stageRef.current
+    const films = run.current
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    let playing = false
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !playing && !tookOver.current) {
+          playing = true
+          void playRef.current()
+        } else if (!entry.isIntersecting && playing) {
+          playing = false
+          if (!tookOver.current) stopRef.current()
+        }
+      },
+      { threshold: 0.35 },
+    )
+    io.observe(el)
+    return () => {
+      io.disconnect()
+      films.token++
+    }
+  }, [])
+
+  const takeOver = () => {
+    tookOver.current = true
+    stop()
+  }
+
   const hint = {
     drag: t.demo.hintDrag,
     drop: t.demo.hintDrop,
@@ -267,10 +430,13 @@ export function EdgeDemo() {
   const activeShelf = t.demo.shelves.find((s) => s.id === active)
   const activeFiles = active ? shelves[active] : []
   const dragging = drag?.started ? drag : null
+  // The file being carried, by the visitor or by the film.
+  const carried = dragging?.file.id ?? ghost?.id
 
   return (
     <div
       ref={stageRef}
+      data-film="stage"
       role="group"
       aria-label={t.demo.label}
       className="relative aspect-[16/11] min-h-[340px] w-full touch-none overflow-hidden rounded-[22px] bg-[var(--ink)] shadow-[var(--shadow-lg)] ring-1 ring-white/10 select-none sm:aspect-[16/10]"
@@ -293,8 +459,9 @@ export function EdgeDemo() {
           type="button"
           className={cn(
             'absolute flex w-[96px] cursor-grab flex-col items-center gap-1.5 rounded-xl p-2 text-center outline-offset-0 hover:bg-white/8 focus-visible:bg-white/10 active:cursor-grabbing',
-            dragging?.file.id === f.id && 'opacity-35',
+            carried === f.id && 'opacity-35',
           )}
+          data-file={f.id}
           style={{ left: f.x, top: `${f.y}%`, touchAction: 'none' }}
           onPointerDown={(e) => onPointerDown(e, f, 'desktop')}
           onKeyDown={(e) => {
@@ -346,6 +513,7 @@ export function EdgeDemo() {
             type="button"
             className="rounded-lg p-1.5 text-white/45 hover:bg-white/8 hover:text-white"
             aria-label={t.demo.close}
+            data-close
             tabIndex={mode === 'open' ? 0 : -1}
             onClick={() => setMode('idle')}
           >
@@ -365,8 +533,9 @@ export function EdgeDemo() {
                 tabIndex={mode === 'open' ? 0 : -1}
                 className={cn(
                   'flex cursor-grab flex-col gap-2 rounded-xl bg-white/[0.04] p-2 text-left ring-1 ring-white/[0.06] hover:bg-white/[0.07] active:cursor-grabbing',
-                  dragging?.file.id === f.id && 'opacity-35',
+                  carried === f.id && 'opacity-35',
                 )}
+                data-card={f.id}
                 style={{ touchAction: 'none' }}
                 onPointerDown={(e) => onPointerDown(e, f, active!)}
                 onKeyDown={(e) => {
@@ -470,24 +639,96 @@ export function EdgeDemo() {
         </div>
       ) : null}
 
-      {/* Hint and reset */}
-      <div className="absolute bottom-3 left-3 z-20 flex max-w-[calc(100%-1.5rem)] items-center gap-2">
+      {/* The film's cursor, carrying the file the way Windows shows it. */}
+      {cursor.shown ? (
+        <div
+          className="pointer-events-none absolute top-0 left-0 z-40"
+          style={{
+            transform: `translate(${cursor.x}px, ${cursor.y}px)`,
+            transition: `transform ${cursor.dur}ms cubic-bezier(0.45, 0.05, 0.25, 1)`,
+          }}
+          aria-hidden
+        >
+          <svg
+            width="22"
+            height="26"
+            viewBox="0 0 22 26"
+            className="drop-shadow-[0_2px_3px_rgba(0,0,0,.45)]"
+            style={{
+              transform: cursor.pressed ? 'scale(0.86)' : 'none',
+              transformOrigin: '3px 3px',
+              transition: 'transform 120ms',
+            }}
+          >
+            <path
+              d="M3 2.5v18.2l4.6-4.4 3.2 7.1 3.1-1.4-3.1-6.8h6.6z"
+              fill="#fff"
+              stroke="#14151c"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+          </svg>
+          {ghost ? (
+            <div className="absolute top-6 left-4 flex items-center gap-2 rounded-xl bg-white/90 py-1.5 pr-3 pl-1.5 whitespace-nowrap shadow-[0_10px_24px_rgba(0,0,0,.35)]">
+              <FileGlyph kind={ghost.kind} size={26} />
+              <span className="text-[11.5px] font-semibold text-[#14151c]">{nameOf(ghost)}</span>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {/* While the film plays, a click anywhere hands the desktop over. */}
+      {auto ? (
+        <div
+          className="absolute inset-0 z-[35] cursor-pointer"
+          onPointerDown={takeOver}
+          aria-hidden
+        />
+      ) : null}
+
+      {/* Hint and controls */}
+      <div className="absolute bottom-3 left-3 z-[45] flex max-w-[calc(100%-1.5rem)] items-center gap-2">
         <p
           aria-live="polite"
           className="truncate rounded-full bg-black/45 px-3 py-1.5 text-[12px] font-medium text-white/85 ring-1 ring-white/10 backdrop-blur"
         >
           {hint}
         </p>
-        {step !== 'drag' ? (
+        {auto ? (
           <button
             type="button"
-            onClick={reset}
-            className="flex shrink-0 items-center gap-1 rounded-full bg-black/45 px-2.5 py-1.5 text-[12px] text-white/70 ring-1 ring-white/10 backdrop-blur hover:text-white"
+            onClick={takeOver}
+            data-film="hide"
+            className="flex shrink-0 items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[12px] font-semibold text-[#14151c] shadow-sm hover:bg-white/90"
           >
-            <RotateCcw size={12} />
-            {t.demo.reset}
+            <Hand size={12} />
+            {t.demo.tryIt}
           </button>
-        ) : null}
+        ) : (
+          <>
+            {step !== 'drag' ? (
+              <button
+                type="button"
+                onClick={reset}
+                className="flex shrink-0 items-center gap-1 rounded-full bg-black/45 px-2.5 py-1.5 text-[12px] text-white/70 ring-1 ring-white/10 backdrop-blur hover:text-white"
+              >
+                <RotateCcw size={12} />
+                {t.demo.reset}
+              </button>
+            ) : null}
+            <button
+              type="button"
+              onClick={() => {
+                tookOver.current = false
+                void play()
+              }}
+              className="flex shrink-0 items-center gap-1 rounded-full bg-black/45 px-2.5 py-1.5 text-[12px] text-white/70 ring-1 ring-white/10 backdrop-blur hover:text-white"
+            >
+              <Play size={12} />
+              {t.demo.play}
+            </button>
+          </>
+        )}
       </div>
     </div>
   )
