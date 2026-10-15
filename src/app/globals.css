@@ -85,10 +85,3 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-
-/* A tab's counter when a file lands on it (as in the app). */
-@keyframes wedge-bump {
-  40% {
-    transform: scale(1.5);
-  }
-}

@@ -4,7 +4,7 @@ import { Download } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
 import { GitHubIcon } from '@/components/icons/GitHubIcon'
-import { EdgeDemo } from '@/components/sections/EdgeDemo'
+import { HeroVideo } from '@/components/sections/HeroVideo'
 import { SITE } from '@/lib/constants'
 import { useLang } from '@/lib/i18n'
 
@@ -47,10 +47,7 @@ export function Hero({ version, downloadUrl }: HeroProps) {
               {t.hero.githubBtn}
             </Button>
           </div>
-          <ul
-            data-film="hide"
-            className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-[var(--muted)]"
-          >
+          <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-[var(--muted)]">
             <li className="font-[family-name:var(--font-mono)] text-[12px]">v{version}</li>
             {t.hero.meta.map((m) => (
               <li key={m} className="flex items-center gap-2">
@@ -61,7 +58,7 @@ export function Hero({ version, downloadUrl }: HeroProps) {
           </ul>
         </div>
         <div className="min-w-0">
-          <EdgeDemo />
+          <HeroVideo />
         </div>
       </Container>
     </section>
