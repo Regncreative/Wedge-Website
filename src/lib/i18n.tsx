@@ -1,14 +1,14 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useSyncExternalStore } from 'react'
 
 export type Lang = 'en' | 'tr'
 
 const en = {
   nav: {
-    demo: 'Demo',
+    how: 'How it works',
     features: 'Features',
-    why: 'Why Stash',
+    screens: 'Screens',
     download: 'Download',
     faq: 'FAQ',
     downloadBtn: 'Download',
@@ -16,179 +16,193 @@ const en = {
   install: {
     open: 'Installation help',
     close: 'Close',
-    title: 'Installing Stash on Windows',
+    title: 'Installing Wedge on Windows',
     intro:
-      'Stash is distributed as a Windows installer (`.exe`) from GitHub Releases. Windows may show a SmartScreen prompt on first run — that’s expected for apps outside the Microsoft Store.',
+      'Wedge comes as a small Windows installer (`.exe`) from GitHub Releases. Until the app is code-signed, Windows may show a SmartScreen prompt the first time.',
     steps: [
-      'Download the latest **Stash Setup** `.exe` from the release page.',
-      'Open the downloaded `.exe` file.',
+      'Download the latest **Wedge** installer (`Wedge_<version>_x64-setup.exe`).',
+      'Open it. No administrator rights are needed.',
       'If **Windows protected your PC** appears, click **More info**, then **Run anyway**.',
-      'Follow the installer, then launch Stash from the Start menu.',
-      'Stash lives in the system tray — look for the Stash icon near the clock, or press `Ctrl+Shift+Space`.',
+      'On first start, choose whether Wedge starts with Windows and adds **Add to Wedge** to File Explorer’s right-click menu.',
+      'Start dragging a file: your shelves slide out of the right edge of the screen. `Ctrl+Shift+Space` opens a drawer any time.',
     ],
     blockedTitle: 'Still blocked?',
     blockedBody:
-      'Open **Windows Security** → **App & browser control** → **Reputation-based protection settings**, and allow the installer. You can also right-click the `.exe` → **Properties** → check **Unblock** → **OK**, then run it again.',
+      'Right-click the `.exe` → **Properties** → check **Unblock** → **OK**, then run it again.',
     whyTitle: 'Why does this happen?',
     whyBody:
-      'Windows SmartScreen warns about apps that are new or not widely signed through the Store. Stash is open source on GitHub — you can review the code and download the official build from Releases before you install.',
+      'SmartScreen warns about new downloads that are not yet code-signed. Wedge is open source: you can read the code and download the official build from GitHub Releases. Updates are signature-checked by the app itself.',
     source: 'Source code',
     release: 'Release page',
   },
   hero: {
+    renamed: 'Stash is now Wedge',
+    title: 'Wedge your files into the edge of your screen.',
     tagline:
-      'A modern file shelf for Windows. Park files in the tray, drag them back when you need them — references only, no clutter.',
+      'Start dragging a file and your shelves slide out. Drop it, keep working, and drag it into any app when you need it. Your files stay where they are.',
     downloadBtn: 'Download for Windows',
     githubBtn: 'View on GitHub',
-    shortcutPrefix: 'Open anytime with',
+    meta: ['Free and open source', 'Windows 10 and 11', '5 MB'],
   },
-  productHunt: {
-    live: 'Live now',
-    title: 'Stash is on Product Hunt',
-    subtitle: 'an upvote helps more people find it',
+  demo: {
+    label: 'Interactive demo of Wedge on a desktop',
+    hintDrag: 'Grab a file and start dragging',
+    hintDrop: 'Drop it on a shelf',
+    hintOpen: 'Click a tab to pull the shelf out',
+    hintOut: 'Drag a card back to the desktop',
+    hintDone: 'That’s the whole idea. Try another file.',
+    reset: 'Start over',
+    close: 'Close',
+    empty: 'Drop files on this tab',
+    files: (n: number) => (n === 1 ? '1 file' : `${n} files`),
+    shelves: [
+      { id: 'pocket', name: 'Pocket', sub: 'DRAG LATER' },
+      { id: 'work', name: 'Work', sub: 'KEPT' },
+      { id: 'personal', name: 'Personal', sub: 'KEPT' },
+      { id: 'temp', name: 'Temporary', sub: 'CLEARS IN 24 H' },
+    ],
+    desktop: ['Proposal.pdf', 'Cover.png', 'Pitch.pptx', 'Budget.xlsx'],
   },
-  productDemo: {
-    eyebrow: 'Product demo',
-    title: 'Feels like a built-in Windows feature',
-    description: 'A desktop workflow on top — then panel, appearance, and settings looping below.',
-    desktopTitle: 'Desktop workflow',
-    desktopDesc: 'Drop a file into Stash from the desktop, then drag it into Mail as an attachment.',
-    panelTitle: 'Panel',
-    panelDesc: 'Search, missing-file awareness, and remove from shelf.',
-    appearanceTitle: 'Appearance',
-    appearanceDesc: 'Language, theme, accent, and idle behavior.',
-    settingsTitle: 'Settings',
-    settingsDesc: 'Sort, hotkey, shelves, and updates.',
+  how: {
+    eyebrow: 'How it works',
+    title: 'One move to put a file away, one to get it back',
+    description: 'No window to find, no folder to open. The shelves are already at the edge.',
+    steps: [
+      {
+        title: 'Start dragging',
+        body: 'From File Explorer, the desktop or a browser. The moment a drag starts, colored shelf tabs slide out of the screen edge.',
+      },
+      {
+        title: 'Drop on a shelf',
+        body: 'Work, Personal, the Pocket, a shared folder: drop on the tab you want and the tabs tuck back in.',
+      },
+      {
+        title: 'Drag it out',
+        body: 'Click a tab to pull the shelf out like a drawer, then drag a card into a mail, a chat or any app.',
+      },
+    ],
   },
   features: {
     eyebrow: 'Features',
-    title: 'Everything you need. Nothing you don’t.',
+    title: 'A shelf that keeps up with you',
     description:
-      'Built as a lightweight productivity tool — focused on temporary files, not another cloud drive.',
-    items: [
+      'Wedge only remembers where your files are. Nothing is moved, copied or uploaded unless you ask.',
+    groups: [
       {
-        title: 'System Tray',
-        description: 'Lives quietly in the tray — one click or shortcut away, never in the way.',
+        title: 'Collect from anywhere',
+        items: [
+          'Tabs that slide out the moment you drag a file',
+          'A Pocket that gathers files from different folders, then lets you drag them all out at once',
+          'Automatic shelves for new downloads and screenshots',
+          'Right-click → Add to Wedge, Ctrl+V, or send from your phone with a QR code',
+        ],
       },
       {
-        title: 'Drag & Drop',
-        description: 'Drop files onto shelves, then drag them into Explorer, browsers, or any app.',
+        title: 'Share',
+        items: [
+          'Turn a Google Drive, OneDrive or Dropbox folder into a shelf',
+          'What a friend, or your other PC, puts there shows up on your shelf',
+        ],
       },
       {
-        title: 'Multiple Shelves',
-        description: 'Organize by context: Work, Personal, Temporary — each with its own accent.',
+        title: 'Find and use',
+        items: [
+          'Real previews on every card; Space for Quick Look',
+          'Search inside PDF, Word, Excel and PowerPoint files',
+          'ZIP, convert and shrink images, open all, drag a whole shelf as one ZIP',
+          'Notes, tags, reminders and shelves that clear themselves',
+        ],
       },
       {
-        title: 'Search',
-        description: 'Find files instantly by name, type, or shelf without opening Explorer.',
-      },
-      {
-        title: 'Themes',
-        description:
-          'Fluent light and dark themes with accent colors that feel native to Windows 11.',
-      },
-      {
-        title: 'Auto Launch',
-        description: 'Start with Windows so your shelf is ready the moment you sign in.',
-      },
-      {
-        title: 'Auto Update',
-        description: 'Updates arrive from GitHub Releases — stay current without hunting installers.',
-      },
-      {
-        title: 'SQLite',
-        description: 'Fast local metadata only. Your files stay on disk; nothing is uploaded.',
-      },
-      {
-        title: 'Localization',
-        description: 'Full Turkish and English UI, including tray menus and system messaging.',
+        title: 'Quiet by design',
+        items: [
+          'No CPU use while it waits at the edge',
+          'Steps aside for full-screen games, videos and presentations',
+          'Desktop widgets, dark and light themes, Turkish and English',
+          'No account, no ads, no telemetry',
+        ],
       },
     ],
-  },
-  why: {
-    eyebrow: 'Why Stash',
-    title: 'Stop parking files on the desktop',
-    description:
-      'Windows never gave you a proper temporary shelf. Stash does — without moving or uploading a byte.',
-    withoutTitle: 'Without Stash',
-    withoutItems: [
-      'Desktop clutter',
-      'Downloads folder chaos',
-      'Constant Explorer switching',
-      'Lost temporary files',
-    ],
-    withTitle: 'With Stash',
-    withItems: ['Clean desktop', 'Organized shelves', 'Instant tray access', 'A clearer workflow'],
   },
   screens: {
-    eyebrow: 'Interface',
-    title: 'The real Stash panel — light and dark',
-    description: 'Fluent surfaces, shelf pills, and file cards that match the installed app.',
+    eyebrow: 'Screens',
+    title: 'The real app, as it looks today',
+    description: 'Shelf tabs on the edge, a drawer pulled out, the Pocket and settings.',
+    items: [
+      {
+        src: '/screens/panel-dark.png',
+        alt: 'A shelf pulled out as a drawer, dark theme',
+        caption: 'A drawer, dark theme',
+      },
+      {
+        src: '/screens/pocket.png',
+        alt: 'The Pocket with files to drag out together',
+        caption: 'The Pocket',
+      },
+      {
+        src: '/screens/panel-light.png',
+        alt: 'A shelf pulled out as a drawer, light theme',
+        caption: 'A drawer, light theme',
+      },
+      {
+        src: '/screens/shared-shelf.png',
+        alt: 'Creating a shared shelf from a cloud folder',
+        caption: 'Shared shelves',
+      },
+      { src: '/screens/settings.png', alt: 'Wedge settings', caption: 'Settings' },
+    ],
   },
   download: {
     eyebrow: 'Download',
-    title: 'Get Stash for Windows',
-    description: 'Installer from GitHub Releases. No account, no telemetry cloud, no file uploads.',
+    title: 'Get Wedge for Windows',
+    description:
+      'Free and open source. A 5 MB installer that uses the WebView2 engine built into Windows, and updates itself, signature-checked.',
     latestVersion: 'Latest version',
-    win10Badge: 'Windows 10 compatible',
-    downloadBtn: 'Download Stash',
-    releasesBtn: 'GitHub Releases',
-    sourcePrefix: 'Prefer source? Clone from',
+    downloadBtn: 'Download Wedge',
+    releasesBtn: 'All releases',
+    facts: ['Windows 10 and 11, 64-bit', 'No administrator rights', 'No account'],
+    renamed: 'Using Stash? It updates to Wedge by itself and keeps every shelf and setting.',
+    smartscreen: 'Windows may warn about a new download. Here’s what to do.',
+    store: 'Coming to the Microsoft Store.',
   },
   faq: {
     eyebrow: 'FAQ',
     title: 'Straight answers',
-    description: 'The short version: local references, no uploads, open source.',
+    description:
+      'Short version: your files stay put, nothing leaves your PC, and it’s open source.',
     items: [
       {
-        q: 'Does Stash move my files?',
-        a: 'No. Stash stores references (paths) only. Your files stay exactly where they are on disk.',
+        q: 'Does Wedge move or copy my files?',
+        a: 'No. It remembers where a file is; the file stays where it was. Removing it from a shelf never deletes it from disk. Only shared shelves copy files, into the shared folder you picked.',
       },
       {
-        q: 'Does it upload files?',
-        a: 'No. There is no cloud sync and no account. Metadata stays local in SQLite on your machine.',
+        q: 'Why is Stash called Wedge now?',
+        a: 'It’s the same app with a new name and logo from version 2.0. Wedge says what it does: it wedges your files into the edge of the screen. Stash updates to Wedge by itself and keeps your shelves and settings.',
       },
       {
-        q: 'Does it require an account?',
-        a: 'No account, no sign-in. Install, launch from the tray, and start dropping files.',
+        q: 'How does it know I’m dragging a file?',
+        a: 'Windows shows a small picture next to the cursor while you drag files. Wedge notices that picture appear and disappear; it doesn’t read your keyboard or mouse.',
+      },
+      {
+        q: 'Does it need an account or upload anything?',
+        a: 'No account, no sign-in, no cloud. Shelves and settings stay on your PC. The only thing it fetches is updates from GitHub.',
+      },
+      {
+        q: 'Does it run on Windows 10?',
+        a: 'Yes, Windows 10 and 11 (64-bit).',
       },
       {
         q: 'Is it open source?',
-        a: 'Yes. Stash is MIT-licensed and developed in the open on GitHub.',
-      },
-      {
-        q: 'Does it support Windows 10?',
-        a: 'Yes. Stash targets Windows 11 aesthetics and is compatible with Windows 10 (x64).',
+        a: 'Yes. Wedge is MIT-licensed and developed in the open on GitHub.',
       },
     ],
   },
   footer: {
     github: 'GitHub',
     releases: 'Releases',
+    privacy: 'Privacy',
     license: 'License',
-  },
-  floating: {
-    hint: 'Try Stash — search, pin, delete',
-    subtitle: 'files · try search, pin, delete',
-    settingsSubtitle: 'Settings',
-    searchPlaceholder: 'Search files…',
-    noMatch: 'No matching files',
-    dropIdle: 'Drop a file or click to add',
-    dropActive: 'Release to stash',
-    note: 'Interactive demo — files stay in this browser tab only',
-    backToShelf: 'Back to shelf',
-    appearance: 'Appearance',
-    theme: 'Theme',
-    light: 'Light',
-    dark: 'Dark',
-    accent: 'Accent color',
-    behavior: 'Behavior',
-    notifications: 'Notifications',
-    notificationsDesc: 'Alerts for added files',
-    hotkeyLabel: 'Panel hotkey',
-    settingsNote: 'Settings apply instantly to this demo',
-    added: 'Added',
-    removed: 'Removed',
+    formerly: 'Formerly Stash',
   },
 }
 
@@ -196,9 +210,9 @@ export type Dict = typeof en
 
 const tr: Dict = {
   nav: {
-    demo: 'Demo',
+    how: 'Nasıl çalışır',
     features: 'Özellikler',
-    why: 'Neden Stash',
+    screens: 'Ekranlar',
     download: 'İndir',
     faq: 'SSS',
     downloadBtn: 'İndir',
@@ -206,186 +220,195 @@ const tr: Dict = {
   install: {
     open: 'Kurulum yardımı',
     close: 'Kapat',
-    title: 'Stash’i Windows’a kurma',
+    title: 'Wedge’i Windows’a kurmak',
     intro:
-      'Stash, GitHub Releases üzerinden Windows kurulum dosyası (`.exe`) olarak dağıtılır. İlk çalıştırmada Windows SmartScreen uyarısı gösterebilir — Microsoft Store dışındaki uygulamalar için bu beklenen bir durumdur.',
+      'Wedge, GitHub Releases’ten küçük bir Windows kurulum dosyası (`.exe`) olarak gelir. Uygulama kod imzalı olana kadar Windows ilk seferde SmartScreen uyarısı gösterebilir.',
     steps: [
-      'Sürüm sayfasından en son **Stash Setup** `.exe` dosyasını indirin.',
-      'İndirdiğiniz `.exe` dosyasını açın.',
-      '**Windows PC’nizi korudu** uyarısı çıkarsa **Ek bilgi**ye, ardından **Yine de çalıştır**a tıklayın.',
-      'Kurulum sihirbazını tamamlayın ve Stash’i Başlat menüsünden açın.',
-      'Stash sistem tepsisinde yaşar — saat yanındaki Stash simgesine bakın veya `Ctrl+Shift+Space` kullanın.',
+      'En son **Wedge** kurulum dosyasını indir (`Wedge_<sürüm>_x64-setup.exe`).',
+      'Aç. Yönetici izni gerekmez.',
+      '**Windows bilgisayarınızı korudu** çıkarsa **Ek bilgi**, sonra **Yine de çalıştır**’a tıkla.',
+      'İlk açılışta Wedge’in Windows ile başlayıp başlamayacağını ve Dosya Gezgini’nin sağ tık menüsüne **Wedge’e ekle** eklenip eklenmeyeceğini seç.',
+      'Bir dosyayı sürüklemeye başla: rafların ekranın sağ kenarından çıkar. `Ctrl+Shift+Space` istediğin an bir çekmece açar.',
     ],
     blockedTitle: 'Hâlâ engelleniyor mu?',
     blockedBody:
-      '**Windows Güvenliği** → **Uygulama ve tarayıcı denetimi** → **İtibar tabanlı koruma ayarları** yolunu açıp yükleyiciye izin verin. Ayrıca `.exe` dosyasına sağ tıklayıp **Özellikler** → **Engellemeyi kaldır** → **Tamam** deyip yeniden çalıştırabilirsiniz.',
-    whyTitle: 'Bu neden olur?',
+      '`.exe` dosyasına sağ tıkla → **Özellikler** → **Engellemeyi kaldır** kutusunu işaretle → **Tamam**, sonra yeniden çalıştır.',
+    whyTitle: 'Bu neden oluyor?',
     whyBody:
-      'Windows SmartScreen, Store dışında yeni veya az bilinen uygulamalar için uyarı verir. Stash GitHub’da açık kaynaklıdır — kurmadan önce kodu inceleyebilir ve resmi derlemeyi Releases’ten indirebilirsiniz.',
-    source: 'Kaynak kod',
+      'SmartScreen, henüz kod imzası olmayan yeni indirmeler için uyarır. Wedge açık kaynaklıdır: kodunu okuyabilir, resmî derlemeyi GitHub Releases’ten indirebilirsin. Güncellemelerin imzasını uygulama kendisi doğrular.',
+    source: 'Kaynak kodu',
     release: 'Sürüm sayfası',
   },
   hero: {
+    renamed: 'Stash artık Wedge',
+    title: 'Dosyalarını ekranının kenarına sıkıştır.',
     tagline:
-      'Windows için modern bir dosya rafı. Dosyaları tepside bekletin, gerektiğinde geri sürükleyin — yalnızca referanslar, dağınıklık yok.',
+      'Bir dosyayı sürüklemeye başla, rafların kenardan çıksın. Bırak, işine devam et; gerektiğinde istediğin uygulamaya sürükle. Dosyaların yerinde kalır.',
     downloadBtn: 'Windows için indir',
-    githubBtn: 'GitHub’da görüntüle',
-    shortcutPrefix: 'İstediğiniz an açın:',
+    githubBtn: 'GitHub’da gör',
+    meta: ['Ücretsiz ve açık kaynak', 'Windows 10 ve 11', '5 MB'],
   },
-  productHunt: {
-    live: 'Canlı',
-    title: 'Stash Product Hunt’ta',
-    subtitle: 'bir upvote daha fazla kişinin bulmasına yardımcı olur',
+  demo: {
+    label: 'Masaüstünde Wedge’in etkileşimli demosu',
+    hintDrag: 'Bir dosyayı tutup sürüklemeye başla',
+    hintDrop: 'Bir rafa bırak',
+    hintOpen: 'Rafı çekmek için bir sekmeye tıkla',
+    hintOut: 'Bir kartı masaüstüne geri sürükle',
+    hintDone: 'Bütün fikir bu. Başka bir dosya dene.',
+    reset: 'Baştan başla',
+    close: 'Kapat',
+    empty: 'Dosyaları bu sekmeye bırak',
+    files: (n: number) => `${n} dosya`,
+    shelves: [
+      { id: 'pocket', name: 'Cep', sub: 'SONRA SÜRÜKLE' },
+      { id: 'work', name: 'İş', sub: 'KALICI' },
+      { id: 'personal', name: 'Kişisel', sub: 'KALICI' },
+      { id: 'temp', name: 'Geçici', sub: '24 SAATTE BOŞALIR' },
+    ],
+    desktop: ['Teklif.pdf', 'Kapak.png', 'Sunum.pptx', 'Bütçe.xlsx'],
   },
-  productDemo: {
-    eyebrow: 'Ürün demosu',
-    title: 'Windows’un yerleşik bir özelliği gibi',
-    description: 'Üstte masaüstü iş akışı — altta panel, görünüm ve ayarlar döngüsü.',
-    desktopTitle: 'Masaüstü iş akışı',
-    desktopDesc: 'Masaüstünden Stash’e bir dosya bırakın, sonra Mail’e ek olarak sürükleyin.',
-    panelTitle: 'Panel',
-    panelDesc: 'Arama, eksik dosya farkındalığı ve raftan silme.',
-    appearanceTitle: 'Görünüm',
-    appearanceDesc: 'Dil, tema, vurgu rengi ve boşta davranışı.',
-    settingsTitle: 'Ayarlar',
-    settingsDesc: 'Sıralama, kısayol, raflar ve güncellemeler.',
+  how: {
+    eyebrow: 'Nasıl çalışır',
+    title: 'Bir hareketle kaldır, bir hareketle geri al',
+    description: 'Aranacak pencere, açılacak klasör yok. Raflar zaten kenarda.',
+    steps: [
+      {
+        title: 'Sürüklemeye başla',
+        body: 'Dosya Gezgini’nden, masaüstünden ya da tarayıcıdan. Sürükleme başladığı an renkli raf sekmeleri ekranın kenarından çıkar.',
+      },
+      {
+        title: 'Bir rafa bırak',
+        body: 'İş, Kişisel, Cep ya da paylaşılan bir klasör: istediğin sekmeye bırak, sekmeler geri çekilsin.',
+      },
+      {
+        title: 'Geri sürükle',
+        body: 'Bir sekmeye tıkla, raf çekmece gibi açılsın; kartı bir e-postaya, sohbete ya da herhangi bir uygulamaya sürükle.',
+      },
+    ],
   },
   features: {
     eyebrow: 'Özellikler',
-    title: 'İhtiyacınız olan her şey. Fazlası değil.',
+    title: 'Senin hızına yetişen bir raf',
     description:
-      'Hafif bir üretkenlik aracı olarak tasarlandı — başka bir bulut sürücüsü değil, geçici dosyalara odaklı.',
-    items: [
+      'Wedge yalnızca dosyalarının nerede olduğunu hatırlar. Sen istemedikçe hiçbir şey taşınmaz, kopyalanmaz ya da yüklenmez.',
+    groups: [
       {
-        title: 'Sistem Tepsisi',
-        description: 'Tepside sessizce yaşar — bir tık veya kısayol uzağınızda, asla yolunuza çıkmaz.',
+        title: 'Her yerden topla',
+        items: [
+          'Bir dosyayı sürüklediğin an kenardan çıkan sekmeler',
+          'Farklı klasörlerden dosya toplayıp hepsini bir seferde sürükleyebileceğin Cep',
+          'Yeni indirmeler ve ekran görüntüleri için otomatik raflar',
+          'Sağ tık → Wedge’e ekle, Ctrl+V ya da QR kodla telefondan gönder',
+        ],
       },
       {
-        title: 'Sürükle & Bırak',
-        description:
-          'Dosyaları raflara bırakın; Explorer’a, tarayıcılara veya herhangi bir uygulamaya sürükleyin.',
+        title: 'Paylaş',
+        items: [
+          'Google Drive, OneDrive veya Dropbox klasörünü rafa dönüştür',
+          'Arkadaşının ya da diğer bilgisayarının oraya koyduğu dosyalar senin rafında görünür',
+        ],
       },
       {
-        title: 'Çoklu Raflar',
-        description: 'Bağlama göre düzenleyin: İş, Kişisel, Geçici — her biri kendi vurgu rengiyle.',
+        title: 'Bul ve kullan',
+        items: [
+          'Her kartta gerçek önizleme; Space ile Hızlı Bakış',
+          'PDF, Word, Excel ve PowerPoint dosyalarının içinde arama',
+          'ZIP, resim dönüştürme ve küçültme, hepsini açma, bütün rafı tek ZIP olarak sürükleme',
+          'Notlar, etiketler, hatırlatıcılar ve kendini temizleyen raflar',
+        ],
       },
       {
-        title: 'Arama',
-        description: 'Explorer’ı açmadan ada, türe veya rafa göre dosyaları anında bulun.',
-      },
-      {
-        title: 'Temalar',
-        description: 'Windows 11’e özgü hissettiren vurgu renkleriyle Fluent açık ve koyu temalar.',
-      },
-      {
-        title: 'Otomatik Başlatma',
-        description: 'Windows ile başlar; oturum açtığınız anda rafınız hazır.',
-      },
-      {
-        title: 'Otomatik Güncelleme',
-        description:
-          'Güncellemeler GitHub Releases’ten gelir — kurulum dosyası aramadan güncel kalın.',
-      },
-      {
-        title: 'SQLite',
-        description: 'Yalnızca hızlı yerel meta veriler. Dosyalarınız diskte kalır; hiçbir şey yüklenmez.',
-      },
-      {
-        title: 'Yerelleştirme',
-        description: 'Tepsi menüleri ve sistem mesajları dahil tam Türkçe ve İngilizce arayüz.',
+        title: 'Sessiz çalışır',
+        items: [
+          'Kenarda beklerken işlemciyi kullanmaz',
+          'Tam ekran oyun, video ve sunumlarda kenara çekilir',
+          'Masaüstü bileşenleri, koyu ve açık tema, Türkçe ve İngilizce',
+          'Hesap yok, reklam yok, veri toplama yok',
+        ],
       },
     ],
-  },
-  why: {
-    eyebrow: 'Neden Stash',
-    title: 'Dosyaları masaüstüne park etmeyi bırakın',
-    description:
-      'Windows size hiçbir zaman düzgün bir geçici raf vermedi. Stash verir — tek bir baytı bile taşımadan veya yüklemeden.',
-    withoutTitle: 'Stash olmadan',
-    withoutItems: [
-      'Masaüstü dağınıklığı',
-      'İndirilenler klasörü kaosu',
-      'Sürekli Explorer arasında geçiş',
-      'Kaybolan geçici dosyalar',
-    ],
-    withTitle: 'Stash ile',
-    withItems: ['Temiz masaüstü', 'Düzenli raflar', 'Anında tepsi erişimi', 'Daha net bir iş akışı'],
   },
   screens: {
-    eyebrow: 'Arayüz',
-    title: 'Gerçek Stash paneli — açık ve koyu',
-    description: 'Yüklü uygulamayla birebir eşleşen Fluent yüzeyler, raf etiketleri ve dosya kartları.',
+    eyebrow: 'Ekranlar',
+    title: 'Uygulamanın bugünkü hali',
+    description: 'Kenardaki raf sekmeleri, açılmış bir çekmece, Cep ve ayarlar.',
+    items: [
+      {
+        src: '/screens/panel-dark.png',
+        alt: 'Çekmece gibi açılmış bir raf, koyu tema',
+        caption: 'Çekmece, koyu tema',
+      },
+      { src: '/screens/pocket.png', alt: 'Birlikte sürüklenecek dosyalarla Cep', caption: 'Cep' },
+      {
+        src: '/screens/panel-light.png',
+        alt: 'Çekmece gibi açılmış bir raf, açık tema',
+        caption: 'Çekmece, açık tema',
+      },
+      {
+        src: '/screens/shared-shelf.png',
+        alt: 'Bulut klasöründen paylaşılan raf oluşturma',
+        caption: 'Paylaşılan raflar',
+      },
+      { src: '/screens/settings.png', alt: 'Wedge ayarları', caption: 'Ayarlar' },
+    ],
   },
   download: {
     eyebrow: 'İndir',
-    title: 'Stash’i Windows için edinin',
-    description: 'GitHub Releases’ten kurulum. Hesap yok, telemetri bulutu yok, dosya yükleme yok.',
-    latestVersion: 'En son sürüm',
-    win10Badge: 'Windows 10 uyumlu',
-    downloadBtn: 'Stash’i indir',
-    releasesBtn: 'GitHub Releases',
-    sourcePrefix: 'Kaynak mı tercih edersiniz? Şuradan klonlayın:',
+    title: 'Windows için Wedge',
+    description:
+      'Ücretsiz ve açık kaynak. Windows’taki WebView2 motorunu kullanan 5 MB’lık bir kurulum; güncellemelerini imzasını doğrulayarak kendisi yapar.',
+    latestVersion: 'Son sürüm',
+    downloadBtn: 'Wedge’i indir',
+    releasesBtn: 'Tüm sürümler',
+    facts: ['Windows 10 ve 11, 64 bit', 'Yönetici izni gerekmez', 'Hesap gerekmez'],
+    renamed:
+      'Stash mi kullanıyorsun? Kendiliğinden Wedge’e güncellenir; bütün rafların ve ayarların korunur.',
+    smartscreen: 'Windows yeni bir indirme için uyarabilir. Ne yapacağın burada.',
+    store: 'Microsoft Store’a geliyor.',
   },
   faq: {
     eyebrow: 'SSS',
-    title: 'Net cevaplar',
-    description: 'Kısaca: yerel referanslar, yükleme yok, açık kaynak.',
+    title: 'Kısa ve net',
+    description: 'Özetle: dosyaların yerinde kalır, hiçbir şey bilgisayarından çıkmaz, kodu açık.',
     items: [
       {
-        q: 'Stash dosyalarımı taşır mı?',
-        a: 'Hayır. Stash yalnızca referansları (yolları) saklar. Dosyalarınız diskte tam olarak oldukları yerde kalır.',
+        q: 'Wedge dosyalarımı taşır ya da kopyalar mı?',
+        a: 'Hayır. Bir dosyanın nerede olduğunu hatırlar; dosya olduğu yerde kalır. Raftan kaldırmak onu diskten silmez. Yalnızca paylaşılan raflar, seçtiğin paylaşılan klasöre dosya kopyalar.',
       },
       {
-        q: 'Dosyaları yüklüyor mu?',
-        a: 'Hayır. Bulut senkronizasyonu ve hesap yok. Meta veriler makinenizde SQLite içinde yerel kalır.',
+        q: 'Stash’in adı neden Wedge oldu?',
+        a: '2.0 sürümüyle aynı uygulama yeni bir isim ve logo aldı. Wedge ne yaptığını söylüyor: dosyalarını ekranın kenarına sıkıştırıyor. Stash kendiliğinden Wedge’e güncellenir, rafların ve ayarların korunur.',
       },
       {
-        q: 'Hesap gerektiriyor mu?',
-        a: 'Hesap yok, oturum açma yok. Kurun, tepsiden başlatın ve dosya bırakmaya başlayın.',
+        q: 'Dosya sürüklediğimi nereden biliyor?',
+        a: 'Windows, dosya sürüklerken imlecin yanında küçük bir resim gösterir. Wedge bu resmin belirip kaybolduğunu fark eder; klavyeni ya da fareni okumaz.',
+      },
+      {
+        q: 'Hesap gerekiyor mu, bir şey yüklüyor mu?',
+        a: 'Hesap yok, giriş yok, bulut yok. Raflar ve ayarlar bilgisayarında kalır. İnternetten aldığı tek şey GitHub’daki güncellemeler.',
+      },
+      {
+        q: 'Windows 10’da çalışır mı?',
+        a: 'Evet, Windows 10 ve 11’de (64 bit).',
       },
       {
         q: 'Açık kaynak mı?',
-        a: 'Evet. Stash MIT lisanslıdır ve GitHub’da açık olarak geliştirilir.',
-      },
-      {
-        q: 'Windows 10’u destekliyor mu?',
-        a: 'Evet. Stash, Windows 11 estetiğini hedefler ve Windows 10 (x64) ile uyumludur.',
+        a: 'Evet. Wedge MIT lisanslıdır ve GitHub’da açık olarak geliştirilir.',
       },
     ],
   },
   footer: {
     github: 'GitHub',
     releases: 'Sürümler',
+    privacy: 'Gizlilik',
     license: 'Lisans',
-  },
-  floating: {
-    hint: 'Stash’i dene — ara, sabitle, sil',
-    subtitle: 'dosya · ara, sabitle, sil',
-    settingsSubtitle: 'Ayarlar',
-    searchPlaceholder: 'Dosya ara…',
-    noMatch: 'Eşleşen dosya yok',
-    dropIdle: 'Dosya bırakın veya tıklayıp ekleyin',
-    dropActive: 'Bırakın, rafa eklensin',
-    note: 'Etkileşimli demo — dosyalar yalnızca bu sekmede kalır',
-    backToShelf: 'Rafa dön',
-    appearance: 'Görünüm',
-    theme: 'Tema',
-    light: 'Açık',
-    dark: 'Koyu',
-    accent: 'Vurgu rengi',
-    behavior: 'Davranış',
-    notifications: 'Bildirimler',
-    notificationsDesc: 'Eklenen dosyalar için uyarılar',
-    hotkeyLabel: 'Panel kısayolu',
-    settingsNote: 'Ayarlar bu demoya anında uygulanır',
-    added: 'Eklendi:',
-    removed: 'Kaldırıldı:',
+    formerly: 'Eski adıyla Stash',
   },
 }
 
 export const COPY: Record<Lang, Dict> = { en, tr }
 
-const STORAGE_KEY = 'stash-lang'
+const STORAGE_KEY = 'wedge-lang'
 
 type LangContextValue = {
   lang: Lang
@@ -399,21 +422,51 @@ const LangContext = createContext<LangContextValue>({
   t: en,
 })
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>('en')
+// The chosen language lives outside React: read once from storage in the
+// browser, English on the server and for first-time visitors.
+const listeners = new Set<() => void>()
+let chosen: Lang | null = null
 
-  useEffect(() => {
-    const saved = window.localStorage.getItem(STORAGE_KEY)
-    if (saved === 'tr' || saved === 'en') {
-      setLang(saved)
-    }
-    // Default remains English for first-time visitors
-  }, [])
+function readSaved(): Lang {
+  try {
+    // Carry over the choice made on the Stash site.
+    const saved =
+      window.localStorage.getItem(STORAGE_KEY) ?? window.localStorage.getItem('stash-lang')
+    return saved === 'tr' ? 'tr' : 'en'
+  } catch {
+    return 'en'
+  }
+}
 
-  useEffect(() => {
+function subscribe(listener: () => void) {
+  listeners.add(listener)
+  return () => {
+    listeners.delete(listener)
+  }
+}
+
+function choose(lang: Lang) {
+  chosen = lang
+  try {
     window.localStorage.setItem(STORAGE_KEY, lang)
+  } catch {
+    // Storage unavailable: the choice lasts for this visit.
+  }
+  listeners.forEach((listener) => listener())
+}
+
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const lang = useSyncExternalStore(
+    subscribe,
+    () => (chosen ??= readSaved()),
+    () => 'en' as Lang,
+  )
+
+  useEffect(() => {
     document.documentElement.lang = lang
   }, [lang])
+
+  const setLang = choose
 
   return (
     <LangContext.Provider value={{ lang, setLang, t: COPY[lang] }}>{children}</LangContext.Provider>

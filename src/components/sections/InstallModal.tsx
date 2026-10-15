@@ -75,7 +75,7 @@ export function InstallModal({ open, onClose, downloadUrl }: InstallModalProps) 
               </button>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 text-[13.5px] leading-relaxed text-white/75 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="min-h-0 flex-1 [scrollbar-width:none] overflow-y-auto px-5 py-4 text-[13.5px] leading-relaxed text-white/75 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
               <p className="text-pretty">{copy.intro}</p>
 
               <ol className="mt-4 list-decimal space-y-2.5 pl-5 marker:text-white/40">
@@ -166,7 +166,7 @@ export function InstallInfoButton({
       onClick={onClick}
       aria-label={t.install.open}
       className={cn(
-        'inline-flex size-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold leading-none text-[var(--foreground)]/70 ring-1 ring-black/20 transition-colors hover:bg-black/[0.05] hover:text-[var(--foreground)] hover:ring-black/30',
+        'inline-flex size-5 shrink-0 items-center justify-center rounded-full text-[10px] leading-none font-semibold text-[var(--foreground)]/70 ring-1 ring-black/20 transition-colors hover:bg-black/[0.05] hover:text-[var(--foreground)] hover:ring-black/30',
         className,
       )}
     >

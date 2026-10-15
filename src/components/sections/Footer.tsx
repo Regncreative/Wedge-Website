@@ -11,6 +11,7 @@ export function Footer() {
   const links = [
     { href: SITE.github, label: t.footer.github },
     { href: SITE.releases, label: t.footer.releases },
+    { href: SITE.privacy, label: t.footer.privacy },
     { href: SITE.license, label: t.footer.license },
   ]
 
@@ -18,14 +19,26 @@ export function Footer() {
     <footer className="border-t border-[var(--border)] py-10">
       <Container className="flex flex-col items-center justify-between gap-6 sm:flex-row">
         <div className="flex items-center gap-3">
-          <Image src="/brand/logo.png" alt="" width={24} height={24} className="rounded-md" />
+          <Image src="/brand/logo.png" alt="" width={28} height={28} className="rounded-[7px]" />
           <div>
-            <p className="text-sm font-semibold text-[var(--foreground)]">Stash</p>
-            <p className="text-xs text-[var(--muted)]">{SITE.author}</p>
+            <p className="font-[family-name:var(--font-display)] text-[15px] font-extrabold tracking-tight">
+              Wedge
+            </p>
+            <p className="text-xs text-[var(--muted)]">
+              {SITE.author} ·{' '}
+              <a
+                href={SITE.productHunt}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[var(--foreground)]"
+              >
+                {t.footer.formerly}
+              </a>
+            </p>
           </div>
         </div>
 
-        <nav className="flex flex-wrap items-center justify-center gap-4" aria-label="Footer">
+        <nav className="flex flex-wrap items-center justify-center gap-5" aria-label="Footer">
           {links.map((link) => (
             <a
               key={link.href}

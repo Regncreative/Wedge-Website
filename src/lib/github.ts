@@ -13,7 +13,7 @@ export async function fetchLatestRelease(): Promise<LatestRelease> {
       next: { revalidate: 3600 },
       headers: {
         Accept: 'application/vnd.github+json',
-        'User-Agent': 'stash-website',
+        'User-Agent': 'wedge-website',
       },
     })
 
@@ -28,9 +28,10 @@ export async function fetchLatestRelease(): Promise<LatestRelease> {
       assets?: Array<{ name: string; browser_download_url: string }>
     }
 
-    const setupAsset = data.assets?.find((asset) =>
-      /stash.*setup.*\.exe$/i.test(asset.name) || /Setup\.exe$/i.test(asset.name),
-    )
+    // The regular installer (Wedge_<version>_x64-setup.exe), not the Store one.
+    const setupAsset =
+      data.assets?.find((asset) => /^wedge_.*_x64-setup\.exe$/i.test(asset.name)) ??
+      data.assets?.find((asset) => /setup\.exe$/i.test(asset.name) && !/store/i.test(asset.name))
 
     return {
       version: (data.tag_name ?? SITE.versionFallback).replace(/^v/, ''),

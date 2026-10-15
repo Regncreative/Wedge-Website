@@ -1,9 +1,7 @@
-import { FloatingDemo } from '@/components/FloatingDemo'
 import { Navbar } from '@/components/sections/Navbar'
 import { Hero } from '@/components/sections/Hero'
-import { ProductDemo } from '@/components/sections/ProductDemo'
+import { HowItWorks } from '@/components/sections/HowItWorks'
 import { Features } from '@/components/sections/Features'
-import { WhyStash } from '@/components/sections/WhyStash'
 import { Screens } from '@/components/sections/Screens'
 import { DownloadSection } from '@/components/sections/DownloadSection'
 import { FAQ } from '@/components/sections/FAQ'
@@ -14,29 +12,25 @@ import { LanguageProvider } from '@/lib/i18n'
 
 export default async function Home() {
   const release = await fetchLatestRelease()
+  const downloadUrl = release.downloadUrl ?? release.url
 
   return (
     <LanguageProvider>
-      <JsonLd version={release.version} />
-      <Navbar downloadUrl={release.downloadUrl ?? release.url} />
+      <JsonLd version={release.version} downloadUrl={downloadUrl} />
+      <Navbar downloadUrl={downloadUrl} />
       <main className="flex-1">
-        <Hero
-          version={release.version}
-          downloadUrl={release.downloadUrl ?? release.url}
-        />
-        <ProductDemo />
+        <Hero version={release.version} downloadUrl={downloadUrl} />
+        <HowItWorks />
         <Features />
-        <WhyStash />
         <Screens />
         <DownloadSection
           version={release.version}
-          downloadUrl={release.downloadUrl ?? release.url}
+          downloadUrl={downloadUrl}
           releaseUrl={release.url}
         />
         <FAQ />
       </main>
       <Footer />
-      <FloatingDemo />
     </LanguageProvider>
   )
 }

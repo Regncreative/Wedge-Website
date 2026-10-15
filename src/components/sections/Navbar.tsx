@@ -7,8 +7,7 @@ import { Download } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
 import { GitHubIcon } from '@/components/icons/GitHubIcon'
-import { FlagEn, FlagTr } from '@/components/demo/flags'
-import { ProductHuntBanner } from '@/components/sections/ProductHuntBanner'
+import { FlagEn, FlagTr } from '@/components/icons/flags'
 import { InstallInfoButton, InstallModal } from '@/components/sections/InstallModal'
 import { SITE } from '@/lib/constants'
 import { useLang, type Lang } from '@/lib/i18n'
@@ -24,9 +23,9 @@ export function Navbar({ downloadUrl }: NavbarProps) {
   const { lang, setLang, t } = useLang()
 
   const links = [
-    { href: '#demo', label: t.nav.demo },
+    { href: '#how', label: t.nav.how },
     { href: '#features', label: t.nav.features },
-    { href: '#why', label: t.nav.why },
+    { href: '#screens', label: t.nav.screens },
     { href: '#download', label: t.nav.download },
     { href: '#faq', label: t.nav.faq },
   ]
@@ -40,20 +39,19 @@ export function Navbar({ downloadUrl }: NavbarProps) {
 
   return (
     <div className="sticky top-0 z-50">
-      <ProductHuntBanner />
       <header
         className={cn(
           'border-b transition-[background-color,border-color,backdrop-filter] duration-300',
           scrolled
-            ? 'border-[var(--border)] bg-white/70 backdrop-blur-xl'
-            : 'border-transparent bg-white/40 backdrop-blur-md',
+            ? 'border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-xl'
+            : 'border-transparent bg-transparent',
         )}
       >
         <Container className="flex h-16 items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2.5" aria-label="Stash home">
-            <Image src="/brand/logo.png" alt="" width={28} height={28} className="rounded-lg" />
-            <span className="text-[15px] font-semibold tracking-tight text-[var(--foreground)]">
-              Stash
+          <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="Wedge home">
+            <Image src="/brand/logo.png" alt="" width={30} height={30} className="rounded-[8px]" />
+            <span className="font-[family-name:var(--font-display)] text-[19px] font-extrabold tracking-[-0.02em] text-[var(--foreground)]">
+              Wedge
             </span>
           </Link>
 
@@ -69,7 +67,7 @@ export function Navbar({ downloadUrl }: NavbarProps) {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
             <div
               className="flex items-center gap-0.5 rounded-full bg-black/[0.04] p-1 ring-1 ring-black/[0.06]"
               role="group"
@@ -100,23 +98,29 @@ export function Navbar({ downloadUrl }: NavbarProps) {
               ))}
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="hidden items-center gap-1 sm:flex">
               <InstallInfoButton onClick={() => setInstallOpen(true)} />
               <Button
                 href={SITE.github}
                 external
                 variant="ghost"
                 className="hidden h-9 px-2.5 sm:inline-flex"
-                aria-label="View Stash on GitHub"
+                aria-label="View Wedge on GitHub"
               >
                 <GitHubIcon />
                 GitHub
               </Button>
             </div>
 
-            <Button href={downloadUrl} external size="md" aria-label="Download latest Stash release">
+            <Button
+              href={downloadUrl}
+              external
+              size="md"
+              className="px-3.5 sm:px-5"
+              aria-label="Download the latest Wedge release"
+            >
               <Download className="size-4" aria-hidden />
-              {t.nav.downloadBtn}
+              <span className="hidden sm:inline">{t.nav.downloadBtn}</span>
             </Button>
           </div>
         </Container>

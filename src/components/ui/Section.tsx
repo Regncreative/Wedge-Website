@@ -41,18 +41,14 @@ export function Section({
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            {eyebrow ? (
-              <p className="mb-3 text-[13px] font-semibold tracking-[0.08em] text-[var(--accent)] uppercase">
-                {eyebrow}
-              </p>
-            ) : null}
+            {eyebrow ? <p className="eyebrow mb-3 text-[var(--accent)]">{eyebrow}</p> : null}
             {title ? (
-              <h2 className="text-balance text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl">
+              <h2 className="text-3xl font-extrabold tracking-[-0.025em] text-balance text-[var(--foreground)] sm:text-[2.6rem] sm:leading-[1.05]">
                 {title}
               </h2>
             ) : null}
             {description ? (
-              <p className="mt-4 text-pretty text-base leading-relaxed text-[var(--muted)] sm:text-lg">
+              <p className="mt-4 text-base leading-relaxed text-pretty text-[var(--muted)] sm:text-lg">
                 {description}
               </p>
             ) : null}

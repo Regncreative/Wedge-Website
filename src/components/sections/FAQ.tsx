@@ -15,12 +15,7 @@ export function FAQ() {
   const faqs = t.faq.items
 
   return (
-    <Section
-      id="faq"
-      eyebrow={t.faq.eyebrow}
-      title={t.faq.title}
-      description={t.faq.description}
-    >
+    <Section id="faq" eyebrow={t.faq.eyebrow} title={t.faq.title} description={t.faq.description}>
       <div className="mx-auto max-w-2xl divide-y divide-[var(--border)] rounded-3xl bg-[var(--surface)] ring-1 ring-[var(--border)]">
         {faqs.map((item, index) => {
           const isOpen = open === index
