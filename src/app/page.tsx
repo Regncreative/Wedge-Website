@@ -7,6 +7,7 @@ import { Screens } from '@/components/sections/Screens'
 import { DownloadSection } from '@/components/sections/DownloadSection'
 import { FAQ } from '@/components/sections/FAQ'
 import { Footer } from '@/components/sections/Footer'
+import { IntroFilm } from '@/components/IntroFilm'
 import { JsonLd } from '@/components/JsonLd'
 import { fetchLatestRelease } from '@/lib/github'
 import { LanguageProvider } from '@/lib/i18n'
@@ -33,6 +34,7 @@ export default async function Home() {
         <FAQ />
       </main>
       <Footer />
+      <IntroFilm />
     </LanguageProvider>
   )
 }

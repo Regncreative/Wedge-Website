@@ -107,6 +107,15 @@ const en = {
       },
     ],
   },
+  intro: {
+    title: 'Wedge in 56 seconds',
+    note: 'Optional. Close it anytime to browse the site.',
+    hint: 'Watch if you like, or go straight to the site.',
+    unmute: 'Unmute',
+    mute: 'Mute',
+    continue: 'Continue to site',
+    close: 'Close the film',
+  },
   film: {
     eyebrow: 'The film',
     title: 'Wedge in 56 seconds',
@@ -317,6 +326,15 @@ const tr: Dict = {
         ],
       },
     ],
+  },
+  intro: {
+    title: '56 saniyede Wedge',
+    note: 'İsteğe bağlı; istediğin an kapatıp siteye geçebilirsin.',
+    hint: 'İstersen izle, istersen doğrudan siteye geç.',
+    unmute: 'Sesi aç',
+    mute: 'Sesi kapat',
+    continue: 'Siteye geç',
+    close: 'Filmi kapat',
   },
   film: {
     eyebrow: 'Tanıtım filmi',
