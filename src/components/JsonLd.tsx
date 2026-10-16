@@ -13,6 +13,16 @@ export function JsonLd({ version, downloadUrl }: { version: string; downloadUrl:
     downloadUrl,
     softwareVersion: version,
     image: `${SITE.url}/brand/og.png`,
+    video: {
+      '@type': 'VideoObject',
+      name: 'Wedge in 56 seconds',
+      description:
+        'Files pile up, the edge of the screen takes them, and they come back into any app.',
+      thumbnailUrl: `${SITE.url}/video/wedge-film-en.jpg`,
+      contentUrl: `${SITE.url}/video/wedge-film-en.mp4`,
+      uploadDate: '2026-10-16',
+      duration: 'PT56S',
+    },
     author: {
       '@type': 'Organization',
       name: SITE.author,

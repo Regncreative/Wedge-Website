@@ -1,9 +1,11 @@
 'use client'
 
 import Image from 'next/image'
+import { FadeIn } from '@/components/motion/FadeIn'
 import { Section } from '@/components/ui/Section'
 import { useLang } from '@/lib/i18n'
 
+/** Screenshots taken from the app itself (tests/e2e/screens.spec.ts), in the reader's language. */
 export function Screens() {
   const { t } = useLang()
 
@@ -14,30 +16,34 @@ export function Screens() {
       title={t.screens.title}
       description={t.screens.description}
     >
-      {/* Screenshots are tall; on narrow screens they scroll sideways in their own row. */}
-      <div className="-mx-5 [scrollbar-width:thin] overflow-x-auto px-5 pb-4 sm:-mx-8 sm:px-8">
-        <ul className="flex w-max gap-5">
-          {t.screens.items.map((item) => (
-            <li key={item.src} className="w-[min(72vw,260px)] shrink-0">
+      <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 lg:grid-cols-3 lg:gap-y-10">
+        {t.screens.items.map((item, i) => (
+          <li key={item.src}>
+            <FadeIn delay={(i % 3) * 0.06}>
               <figure>
-                <div className="overflow-hidden rounded-[18px] bg-[var(--ink)] ring-1 ring-[var(--border)]">
+                <div className="overflow-hidden rounded-[22px] bg-[var(--ink)] shadow-[var(--shadow-md)] ring-1 ring-[var(--border)]">
                   <Image
                     src={item.src}
                     alt={item.alt}
-                    width={512}
-                    height={684}
+                    width={1200}
+                    height={1500}
                     className="h-auto w-full"
-                    sizes="(max-width: 640px) 72vw, 260px"
+                    sizes="(max-width: 1024px) 46vw, 380px"
                   />
                 </div>
-                <figcaption className="mt-3 text-[13.5px] font-medium text-[var(--muted)]">
-                  {item.caption}
+                <figcaption className="mt-3.5 px-1">
+                  <span className="block text-[15px] font-semibold tracking-tight text-[var(--foreground)]">
+                    {item.caption}
+                  </span>
+                  <span className="mt-1 block text-[13.5px] leading-snug text-[var(--muted)]">
+                    {item.body}
+                  </span>
                 </figcaption>
               </figure>
-            </li>
-          ))}
-        </ul>
-      </div>
+            </FadeIn>
+          </li>
+        ))}
+      </ul>
     </Section>
   )
 }

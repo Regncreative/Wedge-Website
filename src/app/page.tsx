@@ -1,5 +1,6 @@
 import { Navbar } from '@/components/sections/Navbar'
 import { Hero } from '@/components/sections/Hero'
+import { Film } from '@/components/sections/Film'
 import { HowItWorks } from '@/components/sections/HowItWorks'
 import { Features } from '@/components/sections/Features'
 import { Screens } from '@/components/sections/Screens'
@@ -20,6 +21,7 @@ export default async function Home() {
       <Navbar downloadUrl={downloadUrl} />
       <main className="flex-1">
         <Hero version={release.version} downloadUrl={downloadUrl} />
+        <Film />
         <HowItWorks />
         <Features />
         <Screens />
