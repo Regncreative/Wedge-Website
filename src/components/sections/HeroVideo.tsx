@@ -55,7 +55,7 @@ function Player({
     return (
       <video
         className="size-full bg-black object-contain"
-        src={`/video/wedge-film-${lang}.mp4`}
+        src={`/video/wedge-film-${lang}.mp4?v=720`}
         poster={`/video/wedge-film-${lang}.jpg`}
         autoPlay
         controls
