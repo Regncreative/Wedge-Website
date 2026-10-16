@@ -107,22 +107,9 @@ const en = {
       },
     ],
   },
-  intro: {
-    title: 'Wedge in 56 seconds',
-    note: 'Optional. Close it anytime to browse the site.',
-    hint: 'Watch if you like, or go straight to the site.',
-    unmute: 'Unmute',
-    mute: 'Mute',
-    continue: 'Continue to site',
-    close: 'Close the film',
-  },
   film: {
-    eyebrow: 'The film',
-    title: 'Wedge in 56 seconds',
-    description:
-      'Files pile up, the edge of the screen takes them, and they come back into any app.',
     label: 'Wedge, the 56-second film, with voice and captions',
-    play: 'Play the film',
+    play: 'Watch the film',
   },
   screens: {
     eyebrow: 'Screens',
@@ -327,22 +314,9 @@ const tr: Dict = {
       },
     ],
   },
-  intro: {
-    title: '56 saniyede Wedge',
-    note: 'İsteğe bağlı; istediğin an kapatıp siteye geçebilirsin.',
-    hint: 'İstersen izle, istersen doğrudan siteye geç.',
-    unmute: 'Sesi aç',
-    mute: 'Sesi kapat',
-    continue: 'Siteye geç',
-    close: 'Filmi kapat',
-  },
   film: {
-    eyebrow: 'Tanıtım filmi',
-    title: '56 saniyede Wedge',
-    description:
-      'Dosyalar birikir, ekranın kenarı onları alır, sonra istediğin uygulamaya geri dönerler.',
     label: 'Wedge’in 56 saniyelik tanıtım filmi, seslendirmeli ve altyazılı',
-    play: 'Filmi oynat',
+    play: 'Filmi izle',
   },
   screens: {
     eyebrow: 'Ekranlar',
