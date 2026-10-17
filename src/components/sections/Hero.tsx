@@ -23,9 +23,9 @@ export function Hero({ version, downloadUrl }: HeroProps) {
         <div className="min-w-0">
           <p className="inline-flex items-center gap-2 rounded-full bg-[var(--surface)] py-1 pr-3 pl-1 text-[12.5px] font-medium text-[var(--muted)] ring-1 ring-[var(--border)]">
             <span className="rounded-full bg-[var(--ink)] px-2 py-0.5 text-[11px] font-semibold text-white">
-              2.0
+              2.1
             </span>
-            {t.hero.renamed}
+            {t.hero.news}
           </p>
           <h1 className="mt-6 text-[clamp(2.6rem,6vw,4.4rem)] leading-[0.98] font-extrabold tracking-[-0.035em] text-[var(--foreground)]">
             {t.hero.title}

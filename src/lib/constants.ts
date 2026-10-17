@@ -13,7 +13,7 @@ export const SITE = {
   // In the Store as Wedge Shelf ("Wedge" was taken).
   msStore: 'https://apps.microsoft.com/detail/9nkp6wx9qgl7',
   repo: 'Regncreative/Wedge',
-  versionFallback: '2.0.0',
+  versionFallback: '2.1.0',
   shortcut: 'Ctrl+Shift+Space',
   productHunt: 'https://www.producthunt.com/products/stash-20',
 } as const

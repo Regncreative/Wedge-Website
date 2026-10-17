@@ -42,6 +42,7 @@ const en = {
   },
   hero: {
     renamed: 'Stash is now Wedge',
+    news: 'New: tabs that hide away, 10 languages',
     title: 'Wedge your files into the edge of your screen.',
     tagline:
       'Start dragging a file and your shelves slide out. Drop it, keep working, and drag it into any app when you need it. Your files stay where they are.',
@@ -82,7 +83,7 @@ const en = {
           'Tabs that slide out the moment you drag a file',
           'A Pocket that gathers files from different folders, then lets you drag them all out at once',
           'Automatic shelves for new downloads and screenshots',
-          'Right-click → Add to Wedge, Ctrl+V, or send from your phone with a QR code',
+          'Right-click → Add to Wedge, Ctrl+V, a link or text dragged from any app, or your phone with a QR code',
         ],
       },
       {
@@ -104,9 +105,10 @@ const en = {
       {
         title: 'Quiet by design',
         items: [
+          'Either edge, at the top, middle or bottom, on the display you pick, or out of sight until you need them',
           'No CPU use while it waits at the edge',
           'Steps aside for full-screen games, videos and presentations',
-          'Desktop widgets, dark and light themes, Turkish and English',
+          'Desktop widgets, dark and light themes, 10 languages',
           'No account, no ads, no telemetry',
         ],
       },
@@ -154,9 +156,9 @@ const en = {
       },
       {
         src: '/screens/en/settings.jpg',
-        alt: 'Wedge settings',
+        alt: 'Wedge settings, Appearance tab: theme, accent color and where the shelves sit',
         caption: 'Settings',
-        body: 'Theme, accent color, shortcut, what to catch.',
+        body: 'Four tabs. Pick the edge, the spot and the display.',
       },
     ],
   },
@@ -191,6 +193,14 @@ const en = {
       {
         q: 'How does it know I’m dragging a file?',
         a: 'Windows shows a small picture next to the cursor while you drag files. Wedge notices that picture appear and disappear; it doesn’t read your keyboard or mouse.',
+      },
+      {
+        q: 'Can I move the tabs, or hide them?',
+        a: 'Yes. In Settings → Appearance, pick the left or right edge, the top, middle or bottom, and the display. Turn on “Hide when not in use” and nothing stays on the edge: the tabs come out when the mouse touches it or a drag starts.',
+      },
+      {
+        q: 'Which languages does it speak?',
+        a: 'English, Turkish, Russian, French, Spanish, German, Portuguese (Brazil), Italian, Polish and Japanese. Wedge follows the language of Windows.',
       },
       {
         q: 'Does it need an account or upload anything?',
@@ -259,6 +269,7 @@ const tr: Dict = {
   },
   hero: {
     renamed: 'Stash artık Wedge',
+    news: 'Yeni: gizlenen sekmeler, 10 dil',
     title: 'Dosyalarını ekranının kenarına sıkıştır.',
     tagline:
       'Bir dosyayı sürüklemeye başla, rafların kenardan çıksın. Bırak, işine devam et; gerektiğinde istediğin uygulamaya sürükle. Dosyaların yerinde kalır.',
@@ -299,7 +310,7 @@ const tr: Dict = {
           'Bir dosyayı sürüklediğin an kenardan çıkan sekmeler',
           'Farklı klasörlerden dosya toplayıp hepsini bir seferde sürükleyebileceğin Cep',
           'Yeni indirmeler ve ekran görüntüleri için otomatik raflar',
-          'Sağ tık → Wedge’e ekle, Ctrl+V ya da QR kodla telefondan gönder',
+          'Sağ tık → Wedge’e ekle, Ctrl+V, herhangi bir uygulamadan sürüklenen link ya da yazı, ya da QR kodla telefondan',
         ],
       },
       {
@@ -321,9 +332,10 @@ const tr: Dict = {
       {
         title: 'Sessiz çalışır',
         items: [
+          'Sol ya da sağ kenarda; üstte, ortada ya da altta; seçtiğin ekranda, ya da gerekene kadar gizli',
           'Kenarda beklerken işlemciyi kullanmaz',
           'Tam ekran oyun, video ve sunumlarda kenara çekilir',
-          'Masaüstü bileşenleri, koyu ve açık tema, Türkçe ve İngilizce',
+          'Masaüstü bileşenleri, koyu ve açık tema, 10 dil',
           'Hesap yok, reklam yok, veri toplama yok',
         ],
       },
@@ -370,9 +382,9 @@ const tr: Dict = {
       },
       {
         src: '/screens/tr/settings.jpg',
-        alt: 'Wedge ayarları',
+        alt: 'Wedge ayarları, Görünüm sekmesi: tema, vurgu rengi ve rafların yeri',
         caption: 'Ayarlar',
-        body: 'Tema, vurgu rengi, kısayol, nelerin yakalanacağı.',
+        body: 'Dört sekme. Kenarı, yeri ve ekranı seç.',
       },
     ],
   },
@@ -407,6 +419,14 @@ const tr: Dict = {
       {
         q: 'Dosya sürüklediğimi nereden biliyor?',
         a: 'Windows, dosya sürüklerken imlecin yanında küçük bir resim gösterir. Wedge bu resmin belirip kaybolduğunu fark eder; klavyeni ya da fareni okumaz.',
+      },
+      {
+        q: 'Sekmelerin yerini değiştirebilir, onları gizleyebilir miyim?',
+        a: 'Evet. Ayarlar → Görünüm’den sol ya da sağ kenarı; üst, orta ya da alt konumu ve ekranı seç. “Kullanılmazken gizle”yi açarsan kenarda hiçbir şey kalmaz: fare kenara değince ya da bir sürükleme başlayınca sekmeler çıkar.',
+      },
+      {
+        q: 'Hangi dilleri konuşuyor?',
+        a: 'Türkçe, İngilizce, Rusça, Fransızca, İspanyolca, Almanca, Portekizce (Brezilya), İtalyanca, Lehçe ve Japonca. Wedge, Windows’un diline uyar.',
       },
       {
         q: 'Hesap gerekiyor mu, bir şey yüklüyor mu?',
