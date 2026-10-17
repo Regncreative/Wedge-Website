@@ -6,6 +6,7 @@ import { Check, Download } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
 import { InstallModal } from '@/components/sections/InstallModal'
+import { StoreBadge } from '@/components/ui/StoreBadge'
 import { SITE } from '@/lib/constants'
 import { useLang } from '@/lib/i18n'
 
@@ -72,6 +73,7 @@ export function DownloadSection({ version, downloadUrl, releaseUrl }: DownloadSe
                   v{version}
                 </span>
               </Button>
+              <StoreBadge tone="light" />
               <Button
                 href={releaseUrl || SITE.releases}
                 external

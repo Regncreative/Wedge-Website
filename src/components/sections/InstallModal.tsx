@@ -4,6 +4,7 @@ import { useEffect, useId } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { StoreBadge } from '@/components/ui/StoreBadge'
 import { SITE } from '@/lib/constants'
 import { useLang } from '@/lib/i18n'
 import { cn } from '@/lib/cn'
@@ -93,6 +94,9 @@ export function InstallModal({ open, onClose, downloadUrl }: InstallModalProps) 
 
               <p className="mt-5 font-semibold text-white/90">{copy.whyTitle}</p>
               <p className="mt-1.5 text-pretty">{copy.whyBody}</p>
+
+              <p className="mt-5 text-pretty text-white/90">{copy.storeTip}</p>
+              <StoreBadge tone="light" className="mt-3" />
             </div>
 
             <div className="flex shrink-0 flex-wrap items-center gap-2 border-t border-white/8 px-5 py-3.5">

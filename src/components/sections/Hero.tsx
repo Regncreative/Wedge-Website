@@ -3,6 +3,7 @@
 import { Download } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
+import { StoreBadge } from '@/components/ui/StoreBadge'
 import { GitHubIcon } from '@/components/icons/GitHubIcon'
 import { HeroVideo } from '@/components/sections/HeroVideo'
 import { SITE } from '@/lib/constants'
@@ -42,6 +43,7 @@ export function Hero({ version, downloadUrl }: HeroProps) {
               <Download className="size-[18px]" aria-hidden />
               {t.hero.downloadBtn}
             </Button>
+            <StoreBadge />
             <Button href={SITE.github} external size="lg" variant="secondary">
               <GitHubIcon />
               {t.hero.githubBtn}

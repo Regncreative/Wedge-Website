@@ -11,6 +11,7 @@ export function JsonLd({ version, downloadUrl }: { version: string; downloadUrl:
     description: SITE.description,
     url: SITE.url,
     downloadUrl,
+    installUrl: SITE.msStore,
     softwareVersion: version,
     image: `${SITE.url}/brand/og.png`,
     video: {

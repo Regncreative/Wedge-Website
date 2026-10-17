@@ -10,6 +10,8 @@ export const SITE = {
   latestRelease: 'https://github.com/Regncreative/Wedge/releases/latest',
   license: 'https://github.com/Regncreative/Wedge/blob/main/LICENSE',
   privacy: 'https://github.com/Regncreative/Wedge/blob/main/PRIVACY.md',
+  // In the Store as Wedge Shelf ("Wedge" was taken).
+  msStore: 'https://apps.microsoft.com/detail/9nkp6wx9qgl7',
   repo: 'Regncreative/Wedge',
   versionFallback: '2.0.0',
   shortcut: 'Ctrl+Shift+Space',

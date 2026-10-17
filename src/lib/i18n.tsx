@@ -34,6 +34,11 @@ const en = {
       'SmartScreen warns about new downloads that are not yet code-signed. Wedge is open source: you can read the code and download the official build from GitHub Releases. Updates are signature-checked by the app itself.',
     source: 'Source code',
     release: 'Release page',
+    storeTip:
+      'Rather skip the warning? Get Wedge Shelf from the Microsoft Store; Microsoft signs it.',
+  },
+  store: {
+    badgeAlt: 'Download from the Microsoft Store',
   },
   hero: {
     renamed: 'Stash is now Wedge',
@@ -166,7 +171,8 @@ const en = {
     facts: ['Windows 10 and 11, 64-bit', 'No administrator rights', 'No account'],
     renamed: 'Using Stash? It updates to Wedge by itself and keeps every shelf and setting.',
     smartscreen: 'Windows may warn about a new download. Here’s what to do.',
-    store: 'Coming to the Microsoft Store.',
+    store:
+      'Also in the Microsoft Store as Wedge Shelf: signed by Microsoft, no SmartScreen warning, updated by the Store.',
   },
   faq: {
     eyebrow: 'FAQ',
@@ -193,6 +199,10 @@ const en = {
       {
         q: 'Does it run on Windows 10?',
         a: 'Yes, Windows 10 and 11 (64-bit).',
+      },
+      {
+        q: 'Microsoft Store or the installer?',
+        a: 'Same app, pick either. The Store version (Wedge Shelf) is signed by Microsoft and the Store keeps it updated; the installer updates itself from GitHub. If you switch to the Store, its first start takes over your shelves.',
       },
       {
         q: 'Is it open source?',
@@ -241,6 +251,11 @@ const tr: Dict = {
       'SmartScreen, henüz kod imzası olmayan yeni indirmeler için uyarır. Wedge açık kaynaklıdır: kodunu okuyabilir, resmî derlemeyi GitHub Releases’ten indirebilirsin. Güncellemelerin imzasını uygulama kendisi doğrular.',
     source: 'Kaynak kodu',
     release: 'Sürüm sayfası',
+    storeTip:
+      'Uyarıyla uğraşmak istemiyor musun? Wedge Shelf’i Microsoft Store’dan al; Microsoft imzalı.',
+  },
+  store: {
+    badgeAlt: 'Microsoft Store’dan indirin',
   },
   hero: {
     renamed: 'Stash artık Wedge',
@@ -373,7 +388,8 @@ const tr: Dict = {
     renamed:
       'Stash mi kullanıyorsun? Kendiliğinden Wedge’e güncellenir; bütün rafların ve ayarların korunur.',
     smartscreen: 'Windows yeni bir indirme için uyarabilir. Ne yapacağın burada.',
-    store: 'Microsoft Store’a geliyor.',
+    store:
+      'Microsoft Store’da da var, adı Wedge Shelf: Microsoft imzalı, SmartScreen uyarısı yok, güncellemeleri Store getirir.',
   },
   faq: {
     eyebrow: 'SSS',
@@ -399,6 +415,10 @@ const tr: Dict = {
       {
         q: 'Windows 10’da çalışır mı?',
         a: 'Evet, Windows 10 ve 11’de (64 bit).',
+      },
+      {
+        q: 'Microsoft Store mu, kurulum dosyası mı?',
+        a: 'Aynı uygulama, hangisini istersen. Store sürümü (Wedge Shelf) Microsoft imzalı ve güncellemelerini Store getirir; kurulum dosyasıyla kurulan sürüm kendini GitHub’dan günceller. Store’a geçersen ilk açılışta rafların oraya taşınır.',
       },
       {
         q: 'Açık kaynak mı?',
