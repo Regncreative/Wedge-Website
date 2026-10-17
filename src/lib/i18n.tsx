@@ -167,7 +167,7 @@ const en = {
       'Free and open source. A 5 MB installer that uses the WebView2 engine built into Windows, and updates itself, signature-checked.',
     latestVersion: 'Latest version',
     downloadBtn: 'Download Wedge',
-    releasesBtn: 'All releases',
+    releasesBtn: 'All releases and release notes on GitHub',
     facts: ['Windows 10 and 11, 64-bit', 'No administrator rights', 'No account'],
     renamed: 'Using Stash? It updates to Wedge by itself and keeps every shelf and setting.',
     smartscreen: 'Windows may warn about a new download. Here’s what to do.',
@@ -383,7 +383,7 @@ const tr: Dict = {
       'Ücretsiz ve açık kaynak. Windows’taki WebView2 motorunu kullanan 5 MB’lık bir kurulum; güncellemelerini imzasını doğrulayarak kendisi yapar.',
     latestVersion: 'Son sürüm',
     downloadBtn: 'Wedge’i indir',
-    releasesBtn: 'Tüm sürümler',
+    releasesBtn: 'Tüm sürümler ve sürüm notları GitHub’da',
     facts: ['Windows 10 ve 11, 64 bit', 'Yönetici izni gerekmez', 'Hesap gerekmez'],
     renamed:
       'Stash mi kullanıyorsun? Kendiliğinden Wedge’e güncellenir; bütün rafların ve ayarların korunur.',

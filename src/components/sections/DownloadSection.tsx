@@ -74,15 +74,6 @@ export function DownloadSection({ version, downloadUrl, releaseUrl }: DownloadSe
                 </span>
               </Button>
               <StoreBadge tone="light" />
-              <Button
-                href={releaseUrl || SITE.releases}
-                external
-                size="lg"
-                variant="secondary"
-                className="bg-white/8 text-white ring-white/12 hover:bg-white/12"
-              >
-                {t.download.releasesBtn}
-              </Button>
             </div>
 
             <ul className="mt-7 grid gap-2 text-[14px] text-white/70 sm:grid-cols-3">
@@ -110,6 +101,16 @@ export function DownloadSection({ version, downloadUrl, releaseUrl }: DownloadSe
                 </button>
               </p>
               <p>{t.download.store}</p>
+              <p>
+                <a
+                  href={releaseUrl || SITE.releases}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline decoration-white/30 underline-offset-4 hover:text-white"
+                >
+                  {t.download.releasesBtn}
+                </a>
+              </p>
             </div>
           </div>
         </div>

@@ -44,17 +44,27 @@ export function Hero({ version, downloadUrl }: HeroProps) {
               {t.hero.downloadBtn}
             </Button>
             <StoreBadge />
-            <Button href={SITE.github} external size="lg" variant="secondary">
-              <GitHubIcon />
-              {t.hero.githubBtn}
-            </Button>
           </div>
           <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-[var(--muted)]">
             <li className="font-[family-name:var(--font-mono)] text-[12px]">v{version}</li>
-            {t.hero.meta.map((m) => (
+            {t.hero.meta.map((m, i) => (
               <li key={m} className="flex items-center gap-2">
                 <span className="size-1.5 rounded-full bg-[var(--iris)]" aria-hidden />
-                {m}
+                {i === 0 ? (
+                  // "Free and open source" leads to the code.
+                  <a
+                    href={SITE.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={t.hero.githubBtn}
+                    className="inline-flex items-center gap-1.5 underline decoration-[var(--border)] underline-offset-4 hover:text-[var(--foreground)]"
+                  >
+                    {m}
+                    <GitHubIcon className="size-3.5" />
+                  </a>
+                ) : (
+                  m
+                )}
               </li>
             ))}
           </ul>
