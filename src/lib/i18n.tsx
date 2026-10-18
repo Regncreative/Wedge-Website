@@ -117,6 +117,8 @@ const en = {
   film: {
     label: 'Wedge, the 56-second film, with voice and captions',
     play: 'Watch the film',
+    news: 'What’s new',
+    newsLabel: 'What’s new in Wedge 2.1, a 45-second video with voice',
   },
   screens: {
     eyebrow: 'Screens',
@@ -344,6 +346,8 @@ const tr: Dict = {
   film: {
     label: 'Wedge’in 56 saniyelik tanıtım filmi, seslendirmeli ve altyazılı',
     play: 'Filmi izle',
+    news: 'Yenilikler',
+    newsLabel: 'Wedge 2.1’deki yenilikler, 45 saniyelik seslendirmeli video',
   },
   screens: {
     eyebrow: 'Ekranlar',
